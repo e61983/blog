@@ -47,7 +47,6 @@ bitbake-layers add-layer ../meta-raspberrypi
 
 ### 修改配置
 
-conf/local.conf:
 ```bash
 sed -i 's/^MACHINE.*/MACHINE ?= "raspberrypi3"/g' conf/local.conf
 sed -i '/^#DL_DIR ?= "${TOPDIR}\/downloads"/ a DL_DIR ?= \"${HOME}/yocto/downloads"' conf/local.conf
@@ -66,8 +65,8 @@ bitbake core-image-minimal
 ### 寫入 SD Card
 
 ```bash
-bzip -Dk wic.bz
-dd if= of=/dev/sdc bs=40960
+bzip -Dk core-image-minimal-raspberrypi3.wic.bz2
+sudo dd if=core-image-minimal-raspberrypi3.wic of=${SD_CARD} bs=40960
 ```
 
 ## 小結
@@ -77,7 +76,9 @@ dd if= of=/dev/sdc bs=40960
 ## 參考連結
 
 - [Yocto official][yocto]
-- [meta-raspberrypi][meta-rpi]
+- [meta-raspberrypi][meta-raspberrypi]
+- [Building Raspberry Pi Systems with Yocto][yocto-rpi]
 
 [yocto]:https://www.yoctoproject.org
 [meta-raspberrypi]:http://git.yoctoproject.org/cgit/cgit.cgi/meta-raspberrypi
+[yocto-rpi]:https://jumpnowtek.com/rpi/Raspberry-Pi-Systems-with-Yocto.html
