@@ -1,10 +1,24 @@
-baseURL = "http://example.org/"
+baseURL = "http://e61983.github.io/"
 languageCode = "en-us"
-title = "My New Hugo Site"
+title = "Yuan のノート"
+
 theme = "uBlogger"
+defaultTheme = "auto"
+
+[Permalinks]
+	posts = ":year-:month-:day-:filename"
 
 [params]
     version = "2.0.X"
+
+[params.footer]
+    enable = true
+    custom = ''
+    hugo = false
+    copyright = true
+    author = true
+    since = 2021
+    license= '<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
 
 [menu]
   [[menu.main]]
@@ -34,3 +48,29 @@ theme = "uBlogger"
     url = "/categories/"
     title = ""
     weight = 3
+
+[markup]
+[markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    lineNumbersInTable = false
+    noClasses = true
+
+[markup.goldmark]
+    [markup.goldmark.extensions]
+      definitionList = true
+      footnote = true
+      linkify = true
+      strikethrough = true
+      table = true
+      taskList = true
+      typographer = true
+
+[markup.goldmark.renderer]
+      # whether to use HTML tags directly in the document
+      unsafe = true
+
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 6
