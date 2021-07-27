@@ -1,5 +1,6 @@
 logoText = "Yuan のノート"
 logoType = "short" # long, short
+logo = false
 description = "心之所至，隨意薍書"
 custom_css = []
 custom_js = []
