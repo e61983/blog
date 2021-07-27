@@ -96,8 +96,8 @@ enableLangChange = false
 enableThemeChange = true
 
 # comment
-enableComment = false
-disqus_shortname = ""
+enableComment = true
+disqus_shortname = "yuan-nonoto"
 commento = false
 
 [socialOptions]
