@@ -77,9 +77,10 @@ source poky/oe-init-build-env first-build
 ```bash
 bitbake core-image-miminal
 ```
-{{< admonition type=hnit title="補充說明" open=true >}}  
+
+{{< notice success "提醒" >}}
 依照網路環境、編譯主機的不同，執行的時間會有所不同。但第一次都要蠻久的就是了。
-{{< /admonition>}}
+{{< /notice >}}
 
 在編譯完成之後，使用 qemu 來看看成果。
 
