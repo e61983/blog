@@ -9,3 +9,9 @@
   name = "Tags"
   url = "tags"
   weight = 2
+
+[[main]]
+  identifier = "archive"
+  name = "Archive"
+  url = "archive"
+  weight = 3
