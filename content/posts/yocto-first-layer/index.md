@@ -10,6 +10,9 @@ categories: ["embedded system"]
 resources:
 - src: image/result-example.png
 - src: images/result-hello-image.png
+- src: images/result-devtool-build.png
+- src: images/result-devtool-qemu.png
+- src: images/devtool-add-flow.png
 ---
 
 ## 前言
@@ -186,6 +189,42 @@ runqemu hello-image nographic slirp
 
 {{< figure src="images/result-hello-image.png" >}}
 
+### 另一個建立 Recipes-hello 的方法
+
+{{< figure src="images/devtool-add-flow.png" >}}
+
+在工作目錄 ( first-build ) 使用 devtool 加入我們寫好的 hello 至 工作目錄中。
+
+```bash
+devtool add hello ../hello
+```
+這個動作會幫我們在 conf/bblayer.bb 中加入 workspace 層，並建立 workspace/recipes/hello 資料夾。
+
+使用下列指令編譯 hello
+```bash
+devtool build hello
+ls 
+```
+
+可以發現它確實多了 Workspace Layer
+
+{{< figure src="images/result-devtool-build.png" >}}
+
+使用 devtool 建立臨時測試用的 image，並使用 qemu 進行驗證。
+
+```bash
+devtool build-image core-image-minimal
+runqemu core-image-minimal nographic slirp
+```
+
+{{< figure src="images/result-devtool-qemu.png" >}}
+
+在測試沒有問題之後，再使用 devtool 將 hello 加入我們的 Layer
+
+```bash
+devtool finish hello ../meta-first-layer
+```
+
 ## 小結
 
 我們已經建立了自己的 Layer、Recipe 以及 Image。 接下來我們就可以試著建立屬於我們的 Distribution 和 Machine 了。
@@ -194,7 +233,11 @@ runqemu hello-image nographic slirp
 
 - [Building your own recipes from first principles][3]
 - [How to fix : ERROR: do_package_qa: QA Issue: No GNU_HASH in the elf binary][2]
+- [Devtool Reference][4]
+- [Yocto Manual][5]
 
 [1]: /2021-07-27-yocto-introduction/#建立-yocto-環境
 [2]: https://lynxbee.com/how-to-fix-error-do_package_qa-qa-issue-no-gnu_hash-in-the-elf-binary/
 [3]: https://wiki.yoctoproject.org/wiki/Building_your_own_recipes_from_first_principles
+[4]: https://docs.yoctoproject.org/ref-manual/devtool-reference.html
+[5]: https://www.yoctoproject.org/docs/2.2/mega-manual/mega-manual.html
