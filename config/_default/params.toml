@@ -101,4 +101,5 @@ disqus_shortname = "yuan-nonoto"
 commento = false
 
 [socialOptions]
-  email = "mailto:e61983+blogg@email.com?subject=[Yuan のノート]"
+  email = "mailto:e61983+blog@email.com?subject=[Yuan のノート]"
+  github = "https://github.com/e61983"
