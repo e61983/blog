@@ -49,6 +49,7 @@ gcc -fgnu-tm
 
 #### Reference
 
+- [Slide](https://docs.google.com/presentation/d/1DlFdPWXcY5or9IyBzEs0K0CufnMe593R2o8vfqkRpXQ/edit#slide=id.p)
 - [reborn2266/STM-Toy](https://github.com/reborn2266/STM-Toy)
 
 ### Learning go error handling design from open source
@@ -61,6 +62,8 @@ gcc -fgnu-tm
 
 ### A trip about how I contribute to LLVM - Douglas Chen
 
+#### References:
+- [Slide](https://www.slideshare.net/bekketmcclane/coscup-2021-llvm-project-the-good-the-bad-and-the-ugly)
 
 ### 從 Go 的 runtime 源碼發掘瘋狂的 slice 用法
 
@@ -76,6 +79,7 @@ gcc -fgnu-tm
 
 #### References:
 - [共筆](https://hackmd.io/YcRP0uMpQ-iHDKEWoiRDYg)
+- [Slide](https://www.slideshare.net/szlin/select-manage-and-backport-the-long-term-stable-kernels)
 - [Automotive Linux](https://www.automotivelinux.org)
 
 ### Cuju - 虛擬機容錯功能實作
