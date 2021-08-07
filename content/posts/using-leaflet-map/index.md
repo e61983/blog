@@ -4,9 +4,9 @@ title: "使用 Leaflet 地圖"
 description: ""
 author: "Yuan"
 draft: false
-tags: ["map","leaflet"]
+tags: ["map","leaflet","geojson"]
 keywords: []
-categories: ["website"]
+categories: ["website", "GIS"]
 resources:
 - src: "images/first-map.png"
 - src: "images/leaflet-mapbox.png"
@@ -14,6 +14,7 @@ resources:
 - src: "images/add-custom-marker.png"
 - src: "images/add-line.png"
 - src: "images/add-controller.png"
+- src: "images/add-geolayer.png"
 ---
 
 ## 前言
@@ -68,14 +69,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}',
     foo: 'bar', 
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
-```
-
-```javascript
-map.value.eachLayer((layer) => {
-    if (layer instanceof L.Marker) {
-        map.value.removeLayer(layer);
-    }
-});
 ```
 
 {{< figure src="images/first-map.png" caption="我們的第一張地圖" >}}
@@ -173,6 +166,7 @@ L.polyline(latlngs, {color: 'red'}).addTo(map);
 我們可以把想要歸在一起的東西放到同一個群組，這樣在接下來要分層顯示的時候，會更簡便一些。
 
 讓我們稍微調整一下程式碼。
+
 ```javascript
 ...
 
@@ -199,7 +193,7 @@ let layer3= L.layerGroup([
 
 將我們群組化後的 Layer 加入控制項中。
 
-```javascipt
+```javascript
 let controller = L.control.layers().addTo(map);
 controller.addOverlay(layer1,"Marker");
 controller.addOverlay(layer2,"自定的Marker");
@@ -208,6 +202,53 @@ controller.expand();
 ```
 
 {{< figure src="images/add-controller.png" caption="加入控制項" >}}
+
+補充一下，如果想移除各個 Layer 的話可以透過下列方式，移除
+
+```javascript
+map.value.eachLayer((layer) => {
+    if (layer instanceof L.Marker) {
+        map.value.removeLayer(layer);
+    }
+});
+
+
+// or 
+
+layer1.remove();
+```
+
+### 20210808 新增 - geoJSON Layer
+
+測試資料可以到[政府開放資料平台][4]取得。
+
+```javascript
+
+let data = {"type":"FeatureCollection", "features": [
+"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[121.543841724,25.0449066970000,...................... ]]]
+]}
+
+function onEachFeature(feature, layer) {
+  if (feature.properties && feature.properties.TOWNNAME) {
+    layer.bindPopup(feature.properties.TOWNNAME);
+  }
+}
+
+L.geoJSON(data, {
+    onEachFeature: onEachFeature,
+    filter: function(feature, layer) {
+        return feature.properties.TOWNNAME == '大安區';
+    },
+    style: function(feature) {
+        switch (feature.properties.TOWNNAME) {
+            case '大安區': return {color: "#00ff00",weight:1};
+            default: return {color: "#333333",weight:1,opacity:0.5 };
+        }
+    }
+}).addTo(map);
+```
+
+{{< figure src="images/add-geolayer.png" caption="使用 geolayer" >}}
 
 ### 成果
 
@@ -226,4 +267,4 @@ controller.expand();
 [1]:https://leafletjs.com/
 [2]:https://docs.mapbox.com/help/troubleshooting/migrate-legacy-static-tiles-api/
 [3]:http://leaflet-extras.github.io/leaflet-providers/preview/index.html
-
+[4]:https://data.gov.tw/dataset/7438
