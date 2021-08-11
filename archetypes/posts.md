@@ -6,7 +6,7 @@ author: "Yuan"
 draft: true
 tags: []
 keywords: []
-categories: ["default"]
+categories: ["default","draft"]
 ---
 
 ## 前言

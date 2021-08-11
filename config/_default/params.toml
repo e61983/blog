@@ -1,7 +1,7 @@
 logoText = "Yuan のノート"
 logoType = "short" # long, short
 logo = false
-description = "心之所至，隨意薍書"
+description = "心之所至，隨意亂書"
 custom_css = []
 custom_js = []
 useFaviconGenerator = false # https://www.favicon-generator.org/
