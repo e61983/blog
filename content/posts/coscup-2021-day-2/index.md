@@ -4,7 +4,7 @@ title: "COSCUP 2021 Day 2"
 description: ""
 author: "Yuan"
 draft: false
-tags: ["mySQL", "ACL", "chatbot", "LIFF", "coscup"]
+tags: ["mysql", "acl", "chatbot", "liff", "coscup"]
 keywords: []
 categories: ["note"]
 resources:

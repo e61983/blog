@@ -6,7 +6,7 @@ author: "Yuan"
 draft: false
 tags: ["map","leaflet","geojson"]
 keywords: []
-categories: ["website", "GIS"]
+categories: ["website", "gis"]
 resources:
 - src: "images/first-map.png"
 - src: "images/leaflet-mapbox.png"
