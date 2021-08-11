@@ -15,7 +15,7 @@ paginate = 13
 rssLimit = 100
 
 enableGitInfo = false
-googleAnalytics = ""
+googleAnalytics = "G-FQ2NLS0SEB"
 
 [Permalinks]
     posts = ":year-:month-:day-:filename"
