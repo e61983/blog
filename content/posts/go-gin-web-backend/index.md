@@ -6,7 +6,7 @@ author: "Yuan"
 draft: false
 tags: ["go","gin","web backend","cookie"]
 keywords: []
-categories: ["web"]
+categories: ["website"]
 ---
 
 ## 前言

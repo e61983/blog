@@ -6,7 +6,7 @@ author: "Yuan"
 draft: false
 tags: ["linux","debian","server"]
 keywords: []
-categories: ["note"]
+categories: ["mis"]
 ---
 
 ## 前言
