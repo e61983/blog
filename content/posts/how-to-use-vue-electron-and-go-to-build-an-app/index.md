@@ -29,8 +29,7 @@ yarn dev
 
 把專案中的 `src` 加上別名 `@`。
 
-```
-
+```bash
 mv vite.config.js vite.config.cjs.bk
 
 cat << EOF > vite.config.cjs
@@ -202,7 +201,7 @@ EOF
 
 ### 安裝及配置 Electron
 
-```
+```bash
 yarn add --dev electron concurrently wait-on cross-env electron-builder
 
 mkdir -p electron
@@ -392,6 +391,8 @@ const { ipcRenderer } = require('electron')
 vite 預設使用的 Port 從 3000 改到了 5173。
 
 {{< figure src="images/vite-default-port.png" caption="dev port" >}}
+
+修正後基本上只要把上面的指令直接貼在終端機中就可以了。
 
 最後附上執行結果！
 
