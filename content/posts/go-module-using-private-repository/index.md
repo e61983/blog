@@ -62,7 +62,7 @@ git config --global url."http://foo.example.idv:8080".insteadof "http://foo.exam
 或是
 
 ```bash
-git config --global url."git@foo.example.idv:".insteadof "http://foo.example.idv"
+git config --global url."ssh://foo.example.idv:".insteadof "http://foo.example.idv"
 ```
 
 #### 策略
