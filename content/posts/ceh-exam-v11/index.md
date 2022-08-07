@@ -119,7 +119,14 @@ What should Bob recommend to deal with such a threat?
 
 ## 小結
 
-筆者認為取得這張證照頂多是知道了相關知識，而非真就真的會進行攻擊。
+筆者是參加 06/06 為期 5 天的課程，並每天下班後利用 0.5 ~ 2 小時進行準備。
+一開始主要是以複習電子教材、在線上 Lab 環境中進行教材內的實驗。
+到了後期改使用網路上可用的考古題資源，進行考題準備。
+在 07/09 參加了第一次考試，結果沒有通過測驗。
+有了前一次考試的經驗，大致上有找到準備的方向。
+於是在 08/03 參加了第二次考試，取得了這張證照。
+如果未來有同學也想取得這張證照的話，或許在上完課之後可以專心的刷考古題。
+幫助蠻大的。
 
 ## 參考連結
 
@@ -131,4 +138,4 @@ What should Bob recommend to deal with such a threat?
 [2]:https://www.uuu.com.tw/Course/Show/300/EC-Council-CEH駭客技術專家認證課程
 [3]:https://www.uuu.com.tw/Forms/ClassPicker/SelectRedhatExams
 [4]:https://www.eccexam.com
-[5]:https://www.examtopics.com/exams/eccouncil/312-50v11
+[5]:https://www.examtopics.com/exams/eccouncil/312-50v11[]()
