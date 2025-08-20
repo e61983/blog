@@ -1,5 +1,66 @@
 baseURL = "https://e61983.github.io/"
-languageCode = 'zh-tw'
-title = 'Yuan のノート'
-theme = "ananke"
+languageCode = "zh-tw"
+title = "Yuan のノート"
+theme = "yuan"
 
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = "github-dark"
+    lineNos = true
+    lineNumbersInTable = true
+    tabWidth = 2
+
+[params]
+  author = "Yuan"
+  description = "心之所至，隨意亂書"
+  keywords = ["golang", "embedded", "linux", "backend", "programming"]
+  
+  # Theme settings
+  darkMode = true
+  showReadingTime = true
+  showWordCount = true
+  showTableOfContents = true
+  
+  # Social links
+  github = "https://github.com/e61983"
+  linkedin = "https://www.linkedin.com/in/hua-yuan-li-b78865a1"
+  
+  # Avatar settings
+  gravatarEmail = "e61983@gmail.com"
+  
+  # Analytics (optional)
+  googleAnalytics = "G-FQ2NLS0SEB"
+
+
+[menu]
+  [[menu.main]]
+    name = "首頁"
+    url = "/"
+    weight = 1
+  
+  [[menu.main]]
+    name = "文章"
+    url = "/posts/"
+    weight = 2
+    
+  [[menu.main]]
+    name = "分類"
+    url = "/categories/"
+    weight = 3
+    
+  [[menu.main]]
+    name = "標籤"
+    url = "/tags/"
+    weight = 4
+    
+  [[menu.main]]
+    name = "歸檔"
+    url = "/archive/"
+    weight = 5
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
