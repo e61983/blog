@@ -1,0 +1,5 @@
+baseURL = "https://e61983.github.io/"
+languageCode = 'zh-tw'
+title = 'Yuan のノート'
+theme = "ananke"
+
