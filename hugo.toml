@@ -10,7 +10,12 @@ theme = "yuan"
   [markup.highlight]
     style = "github-dark"
     lineNos = true
-    lineNumbersInTable = true
+    lineNumbersInTable = false
+    anchorLineNos = false
+    codeFences = true
+    guessSyntax = true
+    hl_Lines = ""
+    noClasses = false
     tabWidth = 2
 
 [params]
