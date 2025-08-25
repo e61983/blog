@@ -4,7 +4,7 @@ title: "要如何在Hugo 中使用Bootstrap ?"
 description: ""
 author: "Yuan"
 draft: false
-tags: ["bootstrap", "web"]
+tags: ["bootstrap", "website"]
 keywords: []
 categories: ["website"]
 ---

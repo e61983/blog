@@ -5,7 +5,7 @@ subtitle: "使用Hugo 靜態網站產生器"
 description: ""
 author: "Yuan"
 draft: false
-tags: ["go", "web", "markdown"]
+tags: ["go", "website", "markdown"]
 keywords: []
 categories: ["website"]
 ---

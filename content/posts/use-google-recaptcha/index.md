@@ -4,7 +4,7 @@ title: "使用 Go 串接 Google reCAPTCHA Enterprise"
 description: ""
 author: "Yuan"
 draft: false
-tags: ["go","google","recaptcha","security","web backend"]
+tags: ["go","google","recaptcha","security","website","backend"]
 keywords: []
 categories: ["website"]
 ---
