@@ -162,6 +162,45 @@ func main() {
   * 一般留言或表單：可適度放寬
   * `score < 0.3` 時可要求額外驗證（例如簡訊或 Email 驗證）
 
+## 完整流程圖
+
+以下是 Google reCAPTCHA Enterprise 的完整驗證流程：
+
+{{< mermaid >}}
+sequenceDiagram
+    participant User as 使用者
+    participant Browser as 瀏覽器
+    participant Backend as 後端伺服器
+    participant Google as Google reCAPTCHA<br/>Enterprise API
+
+    Note over User, Google: reCAPTCHA Enterprise 驗證流程
+
+    User->>Browser: 1. 填寫表單並提交
+    Browser->>Browser: 2. 載入 enterprise.js
+    Browser->>Google: 3. grecaptcha.enterprise.execute()<br/>(site_key, action)
+    Google->>Browser: 4. 回傳 reCAPTCHA Token
+
+    Browser->>Backend: 5. POST /verify-recaptcha<br/>{ "token": "..." }
+
+    Note over Backend, Google: 後端驗證階段
+    Backend->>Google: 6. CreateAssessment API<br/>(project_id, token, site_key)
+    Google->>Backend: 7. Assessment 結果<br/>(Valid, Score, RiskAnalysis)
+
+    alt Token 有效且 Score >= 閾值
+        Backend->>Browser: 8a. { "success": true, "score": 0.8 }
+        Browser->>User: 9a. 驗證通過，執行後續動作
+    else Token 無效或 Score < 閾值
+        Backend->>Browser: 8b. { "success": false, "score": 0.2 }
+        Browser->>User: 9b. 驗證失敗，要求重試或額外驗證
+    end
+{{< /mermaid >}}
+
+從流程圖可以看出，整個驗證過程分為三個主要階段：
+
+1. **前端取得 Token**：使用者提交表單時，瀏覽器呼叫 Google reCAPTCHA API 取得驗證 token
+2. **後端驗證**：將 token 傳送到後端，透過 Google Cloud API 驗證並取得風險評分
+3. **結果處理**：根據驗證結果和評分決定是否允許使用者執行後續動作
+
 ## 小結
 
 完整流程如下：
