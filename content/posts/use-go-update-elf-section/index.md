@@ -1,92 +1,97 @@
 ---
-title: "在 Go Binary 裡，與可寫 section 共舞？！"
-date: 2025-08-31T23:27:28+08:00
-draft: true
+date: 2025-09-09T21:27:28+08:00
+title: "去找吧！我把所有資料都藏在那了 - 通向 Section 航道的旅程"
+description: ""
+author: "Yuan"
+draft: false
+tags: ["go","cgo","elf"]
+keywords: []
+categories: ["note"]
 ---
 
 ## 前言
 
-最近有同學在問：能不能把設定 embed 進 Go binary 裡，然後「不中斷運行」就能改？  
-Go 經典做法是 `//go:embed`，但 embed 起來的配置只能讀不能改。 那…如果我們真的想直接 patch binary 裡的 section，可以怎麼做呢？  
-於是乎這篇就出現了。
+「我要成為海賊王！」  
+這句話大家應該不陌生吧。寫程式有時候就像在 **偉大航道上尋寶**。  
+這次的寶藏不是什麼「One Piece」，而是──**把設定檔藏在 ELF Binary 裡的秘密空間**。  
 
+最近剛好遇到一個需求：想把資料包進程式裡，方便部署，但又不想讓人隨便亂改。  
+就像在跟同學們玩「海上捉迷藏」一樣，所以筆者決定把設定藏進一個 **神秘的 section**，然後用小工具去 patch。
+
+於是乎本篇就誕生了。
 <!--more-->
 
 ## 核心概念
 
-我們這裡講的是 ELF（Linux）或 PE（Windows） binary 裡的 `.rodata` 或自訂 section，屬於不可執行但可以讀出的區段。如果我們把預設設定寫進去，編譯完成後本來是讀不寫的；但只要：
+在 ELF（Linux）或 PE（Windows） binary 世界裡，有很多「島嶼」──每個 section 就是一個島。  
+我們要找的就是那個能保存寶藏的島，例如 `.rodata` 或自訂的 `.mydata`。  
 
-* 在編譯時 **保留固定長度的空間**；
-* 準備一個小工具，在 binary 上下 patch 那段 byte（只能覆寫、不能增減長度）；
+這些島有兩個特色：  
+- 不能執行（safe！不怕炸掉程式）；  
+- 但可以讀出內容。  
 
-就能實現「binary global file」的功能──在 deploy 後仍能動態改設定，還不用重 build。
+於是我們的計畫就像「把寶藏藏在島上」一樣：
 
-## 實作步驟
+1. 在編譯時留下一個固定大小的空間（像是預留寶箱的大小）；  
+2. 寫一個小 patch 工具，就能在航行途中把新的寶物塞進去（但記住──大小不能超過原本的寶箱）。  
 
-### 1. 建立自訂 section 放入設定
+### 建立自訂 Section
 
-在 Go 程式裡，透過 `//go:embed` 或 `ldflags`，把設定放進一個自訂 section（例如 `.configdata`），並且靜默留下一些 padding 確保後續 patch 有空間。
+首先，我們要在 C 世界裡留一個「寶箱」。  
 
 ```go
-//go:embed default_config.json
-var defaultConfig []byte
+/*
+const char mydata[1024] __attribute__((section(".mydata"), used)) = {0};
+*/
 
-var configData [1024]byte
+import "C"
+````
 
-func init() {
-    copy(configData[:], defaultConfig)
-}
-```
+這裡透過 `__attribute__((section(".mydata")))` 指定了寶藏島的座標，大小固定 1024 bytes。
+之後 Go 就能透過 CGO 拿到這個位置。
 
-在 linker 語法裡，也可以指定 section name（例如使用 `-ldflags "-X main.configSection=..."`）。
+### 在 Go 世界開啟寶藏
 
-### 2. Patch 工具讀寫 section
-
-實作一個小工具（用 Go 寫），流程如下：
-
-1. 用 `debug/elf` 或 `debug/pe` 開啟目標 binary。
-2. 掃描找出 `.configdata` section 的 offset 與 size。
-3. Seek 到該區段裡你要替換的位元組位置。
-4. 覆寫新的設定內容（長度不可超過原本空間）。
-5. 重新寫回 binary。
-
-這樣一來，你就能在 binary 裡 embed 預設值 + patchable 區塊，即便 binary 不重新 build，deploy 後也能動態改設定。
-
-## 完整範例程式碼
-
-（這邊只擺核心片段示意，完整可再實作調整）
+我們要有個船員（函式），能幫忙把藏在島上的寶物讀出來：
 
 ```go
 // ===== app/main.go =====
 package main
 
+/*
+const char mydata[1024] __attribute__((section(".mydata"), used)) = {0};
+*/
+import "C"
+
 import (
-  _ "embed"
   "fmt"
+  "unsafe"
 )
 
-//go:embed default_config.json
-var defaultConfig []byte
-
-var configData [1024]byte
-
-func init() {
-  copy(configData[:], defaultConfig)
+func read() []byte {
+  return C.GoBytes(unsafe.Pointer(&C.mydata[0]), 1024)
 }
 
 func main() {
-  fmt.Println("config:", string(configData[:]))
+  fmt.Println("mydata:", string(read()))
 }
 ```
+
+* `C.mydata` 是陣列，要用 `&C.mydata[0]` 才能拿到指標；
+* `unsafe` 需要引入。
+
+### Patch 工具：羅盤與鑰匙
+
+接著我們需要一個「航海士」──工具程式，能找到 `.mydata` 的位置並塞進新的資料。
 
 ```go
 // ===== tools/patcher.go =====
 package main
 
 import (
-  "bytes"
   "debug/elf"
   "flag"
+  "io"
   "os"
 )
 
@@ -95,63 +100,70 @@ func main() {
   newCfg := flag.String("config", "", "path to new config file")
   flag.Parse()
 
-  f, _ := os.OpenFile(*binPath, os.O_RDWR, 0)
+  // 打開寶藏地圖（binary）
+  f, err := os.OpenFile(*binPath, os.O_RDWR, 0)
+  if err != nil {
+    panic(err)
+  }
   defer f.Close()
 
-  ef, _ := elf.NewFile(f)
+  ef, err := elf.NewFile(f)
+  if err != nil {
+    panic(err)
+  }
+
+  cfg, err := os.ReadFile(*newCfg)
+  if err != nil {
+    panic(err)
+  }
+
   for _, sec := range ef.Sections {
-    if sec.Name == ".configdata" {
-      data, _ := sec.Data()
-      offset := bytes.Index(data, []byte("{"))
-      if offset >= 0 {
-        f.Seek(int64(sec.Offset)+int64(offset), 0)
-        newData, _ := os.ReadFile(*newCfg)
-        if len(newData) > len(data)-offset {
-          panic("new config too large")
-        }
-        f.Write(newData)
+    if sec.Name == ".mydata" {
+      if uint64(len(cfg)) > sec.Size {
+        panic("new config too big for treasure chest")
       }
+      // 移動到正確位置
+      f.Seek(int64(sec.Offset), io.SeekStart)
+      // 蓋掉舊的寶藏
+      f.Write(cfg)
+      break
     }
   }
 }
 ```
 
-執行：
+* `sec.Data()` 只是回傳內容，不能直接 patch；
+* 必須用 `f.Seek(sec.Offset)` 定位，再 `f.Write()` 蓋掉；
+* 記得檢查長度，避免寶藏放不下。
+
+## 執行流程
 
 ```bash
 go build -o myapp ./app
 go build -o patcher ./tools/patcher.go
+
+# 放新寶藏
 ./patcher -bin=myapp -config=new_config.json
+
+# 驗證
+./myapp
 ```
 
-這樣 `myapp` 裡的 `.configdata` 就被 patch 成你提供的新 JSON 了！
+## 小提醒
 
-{{<notice "warning" "執行 patcher 出現 nil 錯誤">}}
-當出現下列錯誤訊息時
-```bash
-panic: runtime error: invalid memory address or nil pointer dereference 
-[signal SIGSEGV: segmentation violation code=0x2 addr=0x28 pc=0x1024cc6b4]
-```
-可能是編譯出來的執行檔並不是 ELD 格式的。
+* **Segmentation Fault**：如果 build 出來不是 ELF（例如 macOS 預設是 Mach-O），`debug/elf` 就會爆炸。要加上：
 
-同學們可以使用 `file` 去確認它。
-```
-file ./myapp
-./myapp: Mach-O 64-bit executable arm64
+  ```bash
+  GOOS=linux GOARCH=amd64 go build -o myapp ./app
+  ```
+* **長度限制**：寶藏箱（section）大小固定，超過就會炸。
+* **Alignment**：要對齊，否則可能會在別的島上亂挖洞。
+* **Windows**：PE + code signing 可能會失效，要額外注意。
 
-GOOS=linux GOARCH=amd64 go build -o myapp ./app
-
-file ./myapp
-./myapp: ./app/app: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, BuildID[sha1]=1ffa1b26eaac55e65c340df723c0d4178f2cedae, with debug_info, not stripped
-```
-
-{{</notice>}}
 ## 小結
 
-將設定 embed 進 binary，在 runtime 可讀但不可寫，是 Go 預設模樣。
-但如果同學們希望 deploy 後還能動態 patch，那可以：
+這趟航海之旅，我們學到怎麼把設定藏在 Binary 的 section 裡，就像 Roger 在偉大航道終點留下了寶藏一樣。
 
-* 在 compile 時 **embed + padding** 放入固定長度空間。
-* 用專屬工具 **解析 binary 格式**、找到 section、覆寫內容。
-
-這種方式兼具「部署單檔」與「運行後配置可調」的彈性，但要注意：**不可改長度**、**alignment 要對**，還有 Windows 的 code signing 可能被破壞（Linux 通常沒這問題）。
+這種方式讓程式既能單檔部署，又能後續動態調整設定。
+但就像航海王世界的規則一樣，出航一定有風險在。
+同學們在實作、使用的同時也要小心才不會不小心就踩到「陷阱」。
