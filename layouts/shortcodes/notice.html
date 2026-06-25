@@ -1,44 +1,14 @@
 {{- $type := .Get 0 | default "info" -}}
-{{- $title := .Get 1 | default "" -}}
-
-<div class="notice notice-{{ $type }}" style="
-  border-left: 4px solid;
-  padding: 1rem;
-  margin: 1rem 0;
-  border-radius: 0 4px 4px 0;
-  {{ if eq $type "info" }}
-    border-left-color: #3498db;
-    background-color: #e8f4fd;
-    color: #2c3e50;
-  {{ else if eq $type "warning" }}
-    border-left-color: #f39c12;
-    background-color: #fef9e7;
-    color: #8a6d3b;
-  {{ else if eq $type "tip" }}
-    border-left-color: #27ae60;
-    background-color: #e8f5e8;
-    color: #2c3e50;
-  {{ else if eq $type "note" }}
-    border-left-color: #9b59b6;
-    background-color: #f4ecf7;
-    color: #2c3e50;
-  {{ else if eq $type "caution" }}
-    border-left-color: #e74c3c;
-    background-color: #fdf2f2;
-    color: #a94442;
-  {{ else }}
-    border-left-color: #3498db;
-    background-color: #e8f4fd;
-    color: #2c3e50;
-  {{ end }}
-">
-  {{ if $title }}
-    <div style="font-weight: bold; margin-bottom: 0.5rem;">
-      {{ if eq $type "info" }}ℹ️{{ else if eq $type "warning" }}⚠️{{ else if eq $type "tip" }}💡{{ else if eq $type "note" }}📝{{ else if eq $type "caution" }}🚨{{ else }}ℹ️{{ end }}
-      {{ $title }}
-    </div>
-  {{ end }}
-  <div>
-    {{ .Inner | markdownify }}
-  </div>
+{{- $title := .Get 1 -}}
+{{- $map := dict
+  "info"    (dict "bg" "--color-accent-tint"  "fg" "--action")
+  "tip"     (dict "bg" "--color-success-tint" "fg" "--color-success")
+  "note"    (dict "bg" "--surface-inset"      "fg" "--fg-muted")
+  "warning" (dict "bg" "--color-warning-tint" "fg" "--color-warning")
+  "caution" (dict "bg" "--color-error-tint"   "fg" "--color-error")
+-}}
+{{- $c := index $map $type | default (index $map "info") -}}
+<div class="notice" style="border:1px solid var(--line);border-left:3px solid var({{ $c.fg }});background:var({{ $c.bg }});border-radius:var(--radius-md);padding:var(--space-4) var(--space-5);margin:0 0 var(--space-5)">
+  {{- with $title }}<div style="font:var(--weight-semibold) var(--text-body) var(--font-sans);color:var({{ $c.fg }});margin-bottom:6px">{{ . }}</div>{{ end -}}
+  <div style="color:var(--fg);font-size:var(--text-body);line-height:var(--leading-normal)">{{ .Inner | markdownify }}</div>
 </div>
