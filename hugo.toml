@@ -7,6 +7,10 @@ theme = "yuan"
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+    ordered = false
   [markup.highlight]
     style = "github-dark"
     lineNos = true
@@ -35,7 +39,25 @@ theme = "yuan"
   
   # Avatar settings
   gravatarEmail = "e61983@gmail.com"
-  
+
+  # 角色 badge(關於頁 / 側邊欄)
+  roles = ["後端開發", "嵌入式", "Linux"]
+  since = "2019"
+
+  # 關於頁「關注領域」三卡(icon 對應 partials/icon.html 的名稱)
+  [[params.focusAreas]]
+    icon = "code"
+    title = "後端與 API"
+    desc = "Go 為主力,涵蓋 gRPC、訊息佇列與資料庫設計。"
+  [[params.focusAreas]]
+    icon = "folder"
+    title = "嵌入式系統"
+    desc = "Linux on ARM、Buildroot、Device Tree 與底層除錯。"
+  [[params.focusAreas]]
+    icon = "home"
+    title = "系統與部署"
+    desc = "Docker、CI/CD,以及把服務穩穩送上線的細節。"
+
   # Analytics (optional)
   googleAnalytics = "G-FQ2NLS0SEB"
 
@@ -65,6 +87,11 @@ theme = "yuan"
     name = "歸檔"
     url = "/archive/"
     weight = 5
+
+  [[menu.main]]
+    name = "關於"
+    url = "/about/"
+    weight = 6
 
 [taxonomies]
   category = "categories"
