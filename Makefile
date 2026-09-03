@@ -13,7 +13,7 @@ help:
 	@echo "  deploy - Deploy the site"
 
 dev:
-	@hugo server -p 3000 -D
+	@hugo server -p 3000 -D -F
 
 .PHONY: new
 new:
